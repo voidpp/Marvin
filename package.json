@@ -1,0 +1,33 @@
+{
+  "name": "Marvin",
+  "version": "1.0.0",
+  "description": "Display misc info of current playing in xbmc/kodi, chromecast devices",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/voidpp/Marvin.git"
+  },
+  "author": "Lajos Santa",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/voidpp/Marvin/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-browserify": "~4.0.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-contrib-cssmin": "~0.13.0",
+    "grunt-sass": "~1.0.0",
+    "grunt-contrib-uglify": "~0.9.1",
+    "grunt-contrib-copy": "~0.8.1"
+  },
+  "dependencies": {
+    "react": "~0.13.3",
+    "sprintf-js": "~1.0.3",
+    "events": "~1.0.2",
+    "flux": "~2.1.1"
+  }
+}

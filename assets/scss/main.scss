@@ -1,0 +1,152 @@
+@font-face
+{
+	font-family: Futura;
+	src: url('/static/css/fonts/hfutura2.otf');
+}
+
+body, html {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: black;
+	color: white;
+	font-family: Futura;
+}
+
+$width: 960px;
+$height: 552px;
+$progress_bar_height: 10px;
+
+$basic_font_size: $height / 10;
+
+.content {
+	width: $width;
+	height: $height;
+	position: relative;
+}
+
+.display {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+	clip: rect(0px $width $height 0px);
+}
+
+.active {
+	background: url('/static/pic/bg-wood.jpg') no-repeat no-repeat center top black;
+	.thumb {
+		background-color: black;
+		.pic {
+			max-height: $height - $progress_bar_height;
+			max-width: 370px;
+			min-width: 350px;
+		 	margin-bottom: -5px; /* WTF? */
+			position: relative;
+		}
+	}
+	.title {
+		$padding: 10px;
+		padding: $padding;
+		position: absolute;
+		top: $progress_bar_height;
+		left: 0;
+		font-size: $basic_font_size;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		text-shadow: 4px 4px 2px black;
+		width: $width - (2 * $padding);
+		background-color: rgba(0,0,0,0.4);
+		text-align: right;
+	}
+	.title_bg {
+		position: absolute;
+		top: $progress_bar_height;
+		left: 0;
+		width: $width;
+		filter: blur(5px);
+		background-size: auto $height - $progress_bar_height;
+		background-repeat: no-repeat;
+	}
+	.progress {
+		height: $progress_bar_height;
+		position: relative;
+		z-index: 10;
+		box-sizing: border-box;
+		.value {
+			height: 100%;
+			background-color: #0082C3;
+		}
+	}
+	.details {
+		position: relative;
+		.description {
+			& > .cont {
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+			font-size: $basic_font_size * 0.7;
+			padding: $basic_font_size * 1.7 10px 0 10px;
+			text-align: right;
+			width: 99%;
+		}
+		.times {
+			padding: 10px;
+			text-align: right;
+			.status {
+				display: inline-block;
+				font-size: $basic_font_size * 1.6;
+				margin: 10px 0 0 10px;
+				float: left;
+			}
+			.current {
+				display: inline-block;
+				font-size: $basic_font_size * 2;
+			}
+			.total {
+				&:before {
+					content: '(';
+					margin-left: 10px;
+				}
+				&:after{
+					content: ')';
+				}
+				font-size: $basic_font_size;
+			}
+		}
+		.clock {
+			//border-top: 1px solid rgba(255,255,255,0.2);
+			box-shadow: 4px 4px 10px black inset;
+			background-color: rgba(0,0,0,0.4);
+			padding: 10px;
+			font-size: $basic_font_size * 2;
+			text-align: right;
+			padding-right: 20px;
+		}
+	}
+}
+
+.inactive {
+	background: url('/static/pic/bg-wood.jpg') no-repeat no-repeat center top black;
+	font-size: $basic_font_size * 4;
+	color: rgba(255,255,255,0.8);
+	background-color: black;
+	text-align: center;
+	line-height: $height;
+	width: $width;
+	text-shadow: 5px 5px 5px black;
+	.clock {
+		line-height: normal;
+		margin-top: 55px;
+	}
+	.calendar {
+		font-size: $basic_font_size * 1.5;
+		line-height: normal;
+	}
+}
