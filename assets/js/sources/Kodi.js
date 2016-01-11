@@ -8,6 +8,12 @@ import TimeDelta from '../TimeDelta';
 export class Kodi extends WebSocketSourceBase {
     constructor(host, port, path = '') {
         super(host, port, path);
+        /**
+         * At this time the KODI does not send notification when the subtitle/audio changed.
+         * If the this.propertyLoopInterval is greater than 0, starts a loop for getting player
+         * properties for detect sub/dub changes with this.propertyLoopInterval milliseconds.
+         */
+        this.propertyLoopInterval = 0;
 
         this.content = {
             id: null
@@ -34,11 +40,18 @@ export class Kodi extends WebSocketSourceBase {
                 OnStop: (data) => {
                     PlayerActionCreator.stop();
                     this.content.id = null;
+                    this.stopPropertyLoop();
+                },
+                OnSpeedChanged: (data) => {
+                    this.content.speed = data.player.speed;
+                    PlayerActionCreator.changeContent(this.content);
                 },
                 GetActivePlayers: (data) => {
                     if (data.length)
                         this.send('Player.GetItem', {playerid: data[0].playerid});
                     this.player.id = data.length ? data[0].playerid : null;
+                    if (this.player.id && this.propertyLoopInterval)
+                        this.startPropertyLoop();
                 },
                 GetItem: (data) => {
                     this.content.id = `${data.item.type}_${data.item.id}`;
@@ -47,7 +60,7 @@ export class Kodi extends WebSocketSourceBase {
                             if ('id' in data.item) {
                                 this.send('VideoLibrary.GetMovieDetails', {
                                     movieid: data.item.id,
-                                    properties: ['thumbnail', 'title']
+                                    properties: ['fanart', 'thumbnail', 'title', 'tagline', 'year']
                                 })
                             } else if ('label' in data.item) {
                                 this.content.title = data.item.label;
@@ -72,8 +85,9 @@ export class Kodi extends WebSocketSourceBase {
             VideoLibrary: {
                 GetMovieDetails: (data) => {
                     this.content.thumbnails = [this.formatImage(data.moviedetails.thumbnail)];
+                    this.content.fanarts = [this.formatImage(data.moviedetails.fanart)];
                     this.content.title = data.moviedetails.title;
-                    this.content.description = '';
+                    this.content.description = data.moviedetails.year;
                     this.getContentProps();
                 },
                 GetEpisodeDetails: (data) => {
@@ -81,15 +95,16 @@ export class Kodi extends WebSocketSourceBase {
                     this.content.description = sprintf('%dx%02d', data.episodedetails.season, data.episodedetails.episode);
                     this.send('VideoLibrary.GetTVShowDetails', {
                         tvshowid: data.episodedetails.tvshowid,
-                        properties: ['thumbnail', 'title']
+                        properties: ['fanart', 'thumbnail', 'title']
                     });
                 },
                 GetTVShowDetails: (data) => {
+                    this.content.fanarts = [this.formatImage(data.tvshowdetails.fanart).slice(0, -1)];
                     this.content.thumbnails = [this.formatImage(data.tvshowdetails.thumbnail).slice(0, -1)];
                     this.content.description = `${data.tvshowdetails.title} - ${this.content.description}`;
                     this.send('VideoLibrary.GetSeasons', {
                         tvshowid: data.tvshowdetails.tvshowid,
-                        properties: ['thumbnail'],
+                        properties: ['fanart', 'thumbnail'],
                     });
                 },
                 GetSeasons: (data) => {
@@ -98,6 +113,19 @@ export class Kodi extends WebSocketSourceBase {
                 },
             },
         };
+
+        this.propIntervalId = null;
+    }
+
+    startPropertyLoop() {
+        if (this.propIntervalId != null)
+            return;
+        this.propIntervalId = setInterval(this.getContentProps.bind(this), this.propertyLoopInterval);
+    }
+
+    stopPropertyLoop() {
+        clearInterval(this.propIntervalId);
+        this.propIntervalId = null;
     }
 
     formatImage(image) {
@@ -107,7 +135,7 @@ export class Kodi extends WebSocketSourceBase {
     getContentProps() {
         this.send('Player.GetProperties', {
             playerid: this.player.id,
-            properties: ['percentage', 'time', 'totaltime', 'speed']
+            properties: ['percentage', 'time', 'totaltime', 'speed', 'currentsubtitle', 'currentaudiostream', 'subtitleenabled']
         })
     }
 
@@ -133,7 +161,11 @@ export class Kodi extends WebSocketSourceBase {
     }
 
     processMessage(message) {
-        console.debug('Processing KODI message:', message);
+        if ('error' in message) {
+            console.error('Error received from KODI:', message);
+            return;
+        } else
+            console.debug('Processing KODI message:', message);
 
         let data = null;
         let id = null;

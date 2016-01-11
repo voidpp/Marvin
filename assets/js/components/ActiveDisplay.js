@@ -1,14 +1,19 @@
-
 import React from 'react';
 import {sprintf} from 'sprintf-js';
 
 import {ComponentAsFactory, bind} from '../tools';
 import Clock from './Clock';
+import Calendar from './Calendar';
 import TimeDelta from '../TimeDelta';
 
 class ActiveDisplay extends React.Component {
     constructor(props) {
         super(props);
+        this.speedChars = {
+            0: String.fromCharCode(0x275a) + String.fromCharCode(0x275a),
+            1: String.fromCharCode(0x25b6),
+            2: String.fromCharCode(0x25b6) + String.fromCharCode(0x25b6),
+        }
     }
 
 	formatTime(data) {
@@ -20,30 +25,38 @@ class ActiveDisplay extends React.Component {
 	}
 
     getSpeedIcon() {
-        return this.props.speed ? String.fromCharCode(0x25b6) : String.fromCharCode(0x275a) + String.fromCharCode(0x275a);
+        if (this.props.speed in this.speedChars)
+            return this.speedChars[this.props.speed];
+        else
+            return '';
     }
 
     render() {
         return div({className: 'display active'},
-            div({className: 'progress'},
-                div({className: 'value', style: {width: `${this.props.percentage}%`}})
-            ),
-            table({className: 'details', cellPadding: 0, cellSpacing: 0},
-                tbody(
-                    tr(td({className: 'thumb', rowSpan: '100%'},
-                        img({className: 'pic', src: this.props.thumbnails[0]})
-                    )),
-                    tr(td({className: 'description'}, this.props.description)),
-                    tr(td({className: 'times'},
-                        div({className: 'status'}, this.getSpeedIcon()),
-                        div({className: 'current'}, this.formatTime(this.props.time)),
-                        div({className: 'total'}, this.formatTime(this.props.totaltime))
-                    )),
-                    tr(td({className: 'clock'}, Clock()))
+            div({className: 'fanart', style: {
+                backgroundImage: `url(${this.props.fanarts[0]})`,
+            }}),
+            div({className: 'content'},
+                div({className: 'progress'},
+                    div({className: 'value', style: {width: `${this.props.percentage}%`}})
+                ),
+                div({className: 'details'},
+                    table(
+                        tr(td({className: 'title'}, this.props.title)),
+                        tr(td({className: 'description'}, this.props.description)),
+                        tr(td({className: 'times'},
+                            div({className: 'status'}, this.getSpeedIcon()),
+                            div({className: 'current'}, this.formatTime(this.props.time)),
+                            div({className: 'total'}, `(${this.formatTime(this.props.totaltime)})`)
+                        )),
+                        tr(td({className: 'date'},
+                            Calendar({className: 'calendar'}),
+                            Clock({className: 'clock'})
+                        ))
+                    )
                 )
-            ),
-            div({className: 'title'}, this.props.title)
-        )
+            )
+        );
     }
 }
 
