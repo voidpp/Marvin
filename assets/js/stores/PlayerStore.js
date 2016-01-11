@@ -60,7 +60,7 @@ export class PlayerStore extends EventEmitter {
         let now = new Date();
         let diff = now.getTime() - this.contentTime.getTime();
         this.contentTime = now;
-        this.content.time.addDelta(diff);
+        this.content.time.addDelta(diff * this.content.speed);
         this.__updatePercentage();
         this.emitChange();
     }
