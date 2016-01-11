@@ -3,6 +3,9 @@ Displays various information about current playing content in xbmc/kodi, chromec
 
 Designed for 7-8" tablet with average resolution
 
+## Example screenshot
+![marvin](http://p.coldline.hu/2016/01/11/2094069-20160111-FD4shf.png)
+
 ## Install
 At this time, install possible only from source:
 ```
