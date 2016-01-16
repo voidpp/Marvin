@@ -14,11 +14,12 @@ cd Marvin
 npm install
 cp config_example.js config.js
 # edit config.js ... or assets/scss/main.scss for device width/height
+grunt build
 grunt install --target=/a/wwwroot/folder
 ```
 Install sg webserver, configure the /a/wwwroot/folder as wwwroot.
 
-(After every config modification need to rerun the install command!)
+(After every config modification need to rerun the build+install commands!)
 
 ## External dependencies
-For Chromecast use the PyCCWS https://github.com/voidpp/pyccws 
+(optional) For Chromecast use the PyCCWS https://github.com/voidpp/pyccws 

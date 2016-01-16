@@ -57,6 +57,12 @@ module.exports = function(grunt) {
         },
 
         copy: {
+            dist: {
+                files: [{
+                    src: ['assets/js/app.compiled.js'],
+                    dest: 'static/js/app.min.js',
+                }]
+            },
             install: {
                 files: [{
                     expand: true,
@@ -91,6 +97,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-sass');
 
-	grunt.registerTask('default', ['browserify:dist', 'uglify:dist', 'sass:dist', 'cssmin:dist']);
-    grunt.registerTask('install', ['default', 'copy:install'])
+    grunt.registerTask('default', ['browserify:dev']);
+	grunt.registerTask('build', ['browserify:dist', 'copy:dist', 'sass:dist', 'cssmin:dist']);
+    grunt.registerTask('install', ['copy:install'])
 };
