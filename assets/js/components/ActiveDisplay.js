@@ -34,7 +34,7 @@ class ActiveDisplay extends React.Component {
     render() {
         return div({className: 'display active'},
             div({className: 'fanart', style: {
-                backgroundImage: `url(${this.props.fanarts[0]})`,
+                backgroundImage: `url(${this.props.fanarts[0]}), url(/static/pic/kodi.jpg)`,
             }}),
             div({className: 'content'},
                 div({className: 'progress'},
