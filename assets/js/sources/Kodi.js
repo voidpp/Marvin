@@ -73,6 +73,14 @@ export class Kodi extends WebSocketSourceBase {
                                 properties: ['tvshowid', 'season', 'episode', 'title', 'streamdetails'],
                             });
                             break;
+                        case 'unknown':
+                            this.content = {
+                                title: data.item.label,
+                                description: i('unknown video'),
+                                fanarts: ['/static/pic/kodi.jpg'],
+                            };
+                            this.getContentProps();
+                            break;
                     }
                 },
                 GetProperties: (data) => {
