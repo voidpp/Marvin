@@ -131,7 +131,7 @@ $basic_font_size: $height / 10;
         }
     }
     .date {
-        text-align: right;
+        text-align: left;
         .clock, .calendar {
             display: inline-block;
             font-size: $basic_font_size;
