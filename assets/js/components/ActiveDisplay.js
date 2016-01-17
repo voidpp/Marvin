@@ -64,8 +64,8 @@ ActiveDisplay.propTypes = {
     time: React.PropTypes.instanceOf(TimeDelta).isRequired,
     totaltime: React.PropTypes.instanceOf(TimeDelta).isRequired,
     title: React.PropTypes.string.isRequired,
-    thumbnails: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
-    description: React.PropTypes.string.isRequired,
+    fanarts: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+    description: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
     speed: React.PropTypes.number.isRequired,
     percentage: React.PropTypes.number.isRequired,
 }
