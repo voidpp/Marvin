@@ -56,3 +56,9 @@ docs/_build/
 # PyBuilder
 target/
 node_modules
+
+assets/js/app.compiled.js
+assets/js/config.js
+static/css/main.min.css
+assets/css/main.css
+static/js/app.min.js
